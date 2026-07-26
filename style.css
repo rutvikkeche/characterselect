@@ -34,24 +34,16 @@ html, body {
   overflow: hidden;
 }
 
-/* --- Frame around each driver image: thick black border + per-image
-   background color, so it reads as a distinct card over the page bg --- */
+/* --- Frame is now just a transparent centering wrapper, no visuals --- */
 .frame {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 18px;
-  border-radius: 4px;
-  background-color: #fafafa;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
-  transition: background-color 0.25s ease;
-  max-width: 60vw;
-  max-height: 60vh;
 }
 
 .bg-image {
-  max-width: 100%;
-  max-height: 100%;
+  max-width: 60vw;
+  max-height: 60vh;
   width: auto;
   height: auto;
   display: block;
@@ -59,6 +51,4 @@ html, body {
   user-select: none;
   -webkit-user-drag: none;
   transition: opacity 0.15s ease;
-}
-
 }
