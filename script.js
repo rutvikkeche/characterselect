@@ -20,12 +20,13 @@ const CLICK_SOUND_PATH = "audio/click.mp3";
 // entry here falls back to DEFAULT_BG_COLOR.
 const BG_COLORS = {
   1: "#fafafa",
-  2: "#fafafa",
+  2: "#ffffff",
   3: "#f8f8f8",
   4: "#f7f5f5",
-  5: "#fafafa",
-  6: "#f8f7f7",
-  7: "#f8f7f8",
+  5: "#f7f5f5",
+  6: "#fafafa",
+  7: "#f8f7f7",
+  8: "#f8f7f8",
 };
 const DEFAULT_BG_COLOR = "#fafafa";
 
