@@ -25,7 +25,7 @@ const CLICK_SOUND_PATH = "audio/click.mp3";
 // Single full-page background image, sits behind the whole scene.
 // Set to a path like "images/page-bg.jpg" once you have the file, or
 // leave as null to just use a flat color (falls back to DEFAULT_BG_COLOR).
-const PAGE_BG_IMAGE = null;
+const PAGE_BG_IMAGE = "images/page_bg.jpg";;
 
 // Background color per driver image, keyed by image number.
 const BG_COLORS = {
