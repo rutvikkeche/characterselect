@@ -22,6 +22,11 @@ const IMAGE_EXT = "jpg";
 const MAX_IMAGES_TO_CHECK = 50;
 const CLICK_SOUND_PATH = "audio/click.mp3";
 
+// Single full-page background image, sits behind the whole scene.
+// Set to a path like "images/page-bg.jpg" once you have the file, or
+// leave as null to just use a flat color (falls back to DEFAULT_BG_COLOR).
+const PAGE_BG_IMAGE = null;
+
 // Background color per driver image, keyed by image number.
 const BG_COLORS = {
   1: "#fafafa",
@@ -30,7 +35,7 @@ const BG_COLORS = {
   4: "#f7f5f5",
   5: "#f7f5f5",
   6: "#fafafa",
-  7: "#f7f7f7",
+  7: "#f8f7f7",
   8: "#f8f7f8",
 };
 const DEFAULT_BG_COLOR = "#fafafa";
@@ -39,8 +44,13 @@ let imageCount = 0;
 let currentIndex = 0;
 
 const bgImage = document.getElementById("bg");
-const startBtn = document.getElementById("startBtn");
+const frame = document.getElementById("frame");
+const pageBg = document.getElementById("pageBg");
 const bgMusic = document.getElementById("bgMusic");
+
+if (PAGE_BG_IMAGE) {
+  pageBg.style.backgroundImage = `url("${PAGE_BG_IMAGE}")`;
+}
 
 // --- Click sound effect ---
 const clickSoundTemplate = new Audio(CLICK_SOUND_PATH);
@@ -76,8 +86,7 @@ async function detectImageCount() {
 function showImage(index) {
   bgImage.src = `${IMAGE_FOLDER}/${index}.${IMAGE_EXT}`;
   const color = BG_COLORS[index] || DEFAULT_BG_COLOR;
-  document.body.style.backgroundColor = color;
-  document.querySelector(".screen").style.backgroundColor = color;
+  frame.style.backgroundColor = color;
 }
 
 function goNext() {
@@ -130,14 +139,6 @@ function startMusicOnFirstInteraction() {
 document.addEventListener("click", startMusicOnFirstInteraction);
 document.addEventListener("keydown", startMusicOnFirstInteraction);
 document.addEventListener("touchstart", startMusicOnFirstInteraction);
-
-startBtn.addEventListener("click", () => {
-  playClickSound();
-  if (!musicStarted) playMusic();
-
-  // Hook your actual "start game / next screen" logic here.
-  console.log(`Starting with driver ${currentIndex}`);
-});
 
 // --- Init ---
 (async function init() {
