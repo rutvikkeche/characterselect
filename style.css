@@ -41,7 +41,6 @@ html, body {
   align-items: center;
   justify-content: center;
   padding: 18px;
-  border: 10px solid #000;
   border-radius: 4px;
   background-color: #fafafa;
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
@@ -62,9 +61,4 @@ html, body {
   transition: opacity 0.15s ease;
 }
 
-@media (max-width: 600px) {
-  .frame {
-    border-width: 6px;
-    padding: 10px;
-  }
 }
