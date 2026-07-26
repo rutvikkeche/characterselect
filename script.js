@@ -3,21 +3,26 @@
    -----------------------------------------------------------
    - Images live in /images/ and MUST be named 1.jpeg, 2.jpeg,
      3.jpeg, ... in sequence (no gaps). To add a new driver,
-     just drop in the next number (e.g. images/6.jpeg) — no
+     just drop in the next number (e.g. images/9.jpeg) — no
      code changes needed.
    - IMAGE_EXT below controls the file extension it looks for.
    - MAX_IMAGES_TO_CHECK is just a safety ceiling for the
      auto-detect probe, raise it if you'll have more than 50.
+   - Left/Right ARROW KEYS switch drivers (no on-screen arrow
+     buttons — keyboard only, per current design).
+   - Background music autoplays and loops, with no mute/toggle
+     button. Browsers block unmuted autoplay before any user
+     interaction, so if the initial play() attempt is blocked,
+     it kicks in silently on the user's very first click, key
+     press, or tap anywhere on the page.
    ========================================================= */
 
 const IMAGE_FOLDER = "images";
-const IMAGE_EXT = "jpeg";
+const IMAGE_EXT = "jpg";
 const MAX_IMAGES_TO_CHECK = 50;
 const CLICK_SOUND_PATH = "audio/click.mp3";
 
 // Background color per driver image, keyed by image number.
-// Fill in a hex code for each image you have; any image without an
-// entry here falls back to DEFAULT_BG_COLOR.
 const BG_COLORS = {
   1: "#fafafa",
   2: "#ffffff",
@@ -34,15 +39,10 @@ let imageCount = 0;
 let currentIndex = 0;
 
 const bgImage = document.getElementById("bg");
-const prevBtn = document.getElementById("prevBtn");
-const nextBtn = document.getElementById("nextBtn");
-const muteBtn = document.getElementById("muteBtn");
 const startBtn = document.getElementById("startBtn");
 const bgMusic = document.getElementById("bgMusic");
 
 // --- Click sound effect ---
-// A fresh clone is played each time so rapid-fire clicks (e.g. holding
-// down an arrow key) don't cut the previous click sound off.
 const clickSoundTemplate = new Audio(CLICK_SOUND_PATH);
 clickSoundTemplate.preload = "auto";
 
@@ -92,7 +92,7 @@ function goPrev() {
   showImage(currentIndex);
 }
 
-// --- Arrow key + button navigation ---
+// --- Arrow key navigation (keyboard only, no on-screen buttons) ---
 document.addEventListener("keydown", (e) => {
   if (e.key === "ArrowRight") {
     playClickSound();
@@ -104,37 +104,32 @@ document.addEventListener("keydown", (e) => {
   }
 });
 
-nextBtn.addEventListener("click", () => {
-  playClickSound();
-  goNext();
-});
-
-prevBtn.addEventListener("click", () => {
-  playClickSound();
-  goPrev();
-});
-
-// --- Music controls ---
+// --- Music: always playing, no toggle ---
 let musicStarted = false;
 
 function playMusic() {
-  bgMusic.muted = false;
-  bgMusic.play().catch(() => {
-    /* Autoplay was blocked; user can hit the sound icon to retry. */
-  });
-  musicStarted = true;
-  muteBtn.classList.remove("muted");
+  bgMusic.play()
+    .then(() => {
+      musicStarted = true;
+    })
+    .catch(() => {
+      /* Blocked until a user gesture happens; the listener below retries. */
+    });
 }
 
-muteBtn.addEventListener("click", () => {
-  playClickSound();
-  if (!musicStarted) {
-    playMusic();
-    return;
-  }
-  bgMusic.muted = !bgMusic.muted;
-  muteBtn.classList.toggle("muted", bgMusic.muted);
-});
+// Try immediately on load...
+playMusic();
+
+// ...and if the browser blocked that, start on the very first interaction.
+function startMusicOnFirstInteraction() {
+  if (!musicStarted) playMusic();
+  document.removeEventListener("click", startMusicOnFirstInteraction);
+  document.removeEventListener("keydown", startMusicOnFirstInteraction);
+  document.removeEventListener("touchstart", startMusicOnFirstInteraction);
+}
+document.addEventListener("click", startMusicOnFirstInteraction);
+document.addEventListener("keydown", startMusicOnFirstInteraction);
+document.addEventListener("touchstart", startMusicOnFirstInteraction);
 
 startBtn.addEventListener("click", () => {
   playClickSound();
@@ -149,7 +144,7 @@ startBtn.addEventListener("click", () => {
   imageCount = await detectImageCount();
   if (imageCount === 0) {
     console.warn(
-      `No images found in "${IMAGE_FOLDER}/" named 1.${IMAGE_EXT}, 2.${IMAGE_EXT}, etc.`
+      `No images found in "${IMAGE_FOLDER}/" named 1.${IMAGE_EXT}, 2.${IMAGE_EXT}, etc. Add your image files there.`
     );
     return;
   }
