@@ -30,7 +30,7 @@ const BG_COLORS = {
   4: "#f7f5f5",
   5: "#f7f5f5",
   6: "#fafafa",
-  7: "#f8f7f7",
+  7: "#f7f7f7",
   8: "#f8f7f8",
 };
 const DEFAULT_BG_COLOR = "#fafafa";
